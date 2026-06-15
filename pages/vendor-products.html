@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Products — Vender Vendor Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .vp-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+
+    .vp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vp-header-left h1 {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 4px 0;
+    }
+
+    .vp-header-left p {
+      font-size: 14px;
+      color: var(--text-3);
+      margin: 0;
+    }
+
+    .vp-add-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .vp-add-btn:hover {
+      background: var(--green-dark);
+      transform: translateY(-2px);
+    }
+
+    /* TABS */
+    .vp-tabs {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vp-tab {
+      padding: 12px 0;
+      border: none;
+      background: none;
+      color: var(--text-2);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      position: relative;
+      font-family: var(--font-body);
+      transition: color 0.2s;
+    }
+
+    .vp-tab:hover {
+      color: var(--text);
+    }
+
+    .vp-tab.active {
+      color: var(--green);
+    }
+
+    .vp-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--green);
+    }
+
+    /* PRODUCTS TABLE */
+    .vp-table {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+    }
+
+    .vp-table-head {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .vp-table-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .vp-table-row:hover {
+      background: var(--bg);
+    }
+
+    .vp-table-row:last-child {
+      border-bottom: none;
+    }
+
+    .vp-product-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .vp-product-img {
+      width: 40px;
+      height: 40px;
+      background: var(--bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .vp-product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .vp-product-info {
+      min-width: 0;
+    }
+
+    .vp-product-name {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vp-product-id {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .vp-price {
+      font-weight: 700;
+      color: var(--green);
+      font-size: 14px;
+    }
+
+    .vp-status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .vp-status.active {
+      background: var(--green-light);
+      color: var(--green-dark);
+    }
+
+    .vp-status.draft {
+      background: #F3F4F6;
+      color: #6B7280;
+    }
+
+    .vp-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .vp-action-btn {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text-2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .vp-action-btn:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .vp-action-btn.delete:hover {
+      background: #FEE2E2;
+      color: #DC2626;
+    }
+
+    /* EMPTY STATE */
+    .vp-empty {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-2);
+    }
+
+    .vp-empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .vp-empty-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    /* MODAL */
+    .vp-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .vp-modal.open {
+      display: flex;
+    }
+
+    .vp-modal-content {
+      background: white;
+      border-radius: var(--card-radius);
+      padding: 28px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      my-auto: center;
+    }
+
+    .vp-modal-title {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .vp-form-group {
+      margin-bottom: 20px;
+    }
+
+    .vp-form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .vp-form-input,
+    .vp-form-select,
+    .vp-form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text);
+      box-sizing: border-box;
+    }
+
+    .vp-form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .vp-form-input:focus,
+    .vp-form-select:focus,
+    .vp-form-textarea:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-light);
+    }
+
+    .vp-form-error {
+      font-size: 12px;
+      color: #DC2626;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .vp-form-error.show {
+      display: block;
+    }
+
+    .vp-photo-upload {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .vp-photo-input {
+      display: none;
+    }
+
+    .vp-photo-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 24px;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--bg);
+    }
+
+    .vp-photo-label:hover {
+      border-color: var(--green);
+      background: var(--green-light);
+    }
+
+    .vp-photo-label-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .vp-photo-label-text {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .vp-photo-label-sub {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .vp-photo-preview {
+      margin-top: 12px;
+      position: relative;
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      background: var(--bg);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .vp-photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .vp-photo-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      background: #DC2626;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .vp-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .vp-modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .vp-modal-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .vp-modal-btn-cancel {
+      background: var(--bg);
+      color: var(--text-2);
+    }
+
+    .vp-modal-btn-save {
+      background: var(--green);
+      color: white;
+    }
+
+    .vp-modal-btn-save:hover {
+      background: var(--green-dark);
+    }
+
+    @media (max-width: 768px) {
+      .vp-table-head,
+      .vp-table-row {
+        grid-template-columns: 1fr;
+      }
+
+      .vp-form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="../index.html">Ven<span>der</span></a>
+    <ul class="nav-links">
+      <li><a href="vendor-orders.html">Orders</a></li>
+      <li><a href="vendor-products.html" style="color: var(--green); font-weight: 600;">Products</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-signin" onclick="logout()" style="background: var(--red-light); color: var(--red);">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<div class="vp-layout">
+
+  <!-- HEADER -->
+  <div class="vp-header">
+    <div class="vp-header-left">
+      <h1>My Products</h1>
+      <p>Manage your inventory and pricing</p>
+    </div>
+    <button class="vp-add-btn" onclick="openAddProductModal()">
+      <span>+</span>
+      Add Product
+    </button>
+  </div>
+
+  <!-- TABS -->
+  <div class="vp-tabs">
+    <button class="vp-tab active" onclick="switchTab('active')">Active</button>
+    <button class="vp-tab" onclick="switchTab('draft')">Draft</button>
+    <button class="vp-tab" onclick="switchTab('all')">All Products</button>
+  </div>
+
+  <!-- PRODUCTS TABLE -->
+  <div class="vp-table">
+    <div class="vp-table-head">
+      <div>Product</div>
+      <div>Price</div>
+      <div>Category</div>
+      <div>Status</div>
+      <div>Actions</div>
+    </div>
+    <div id="vp-table-body">
+      <div style="padding: 60px 20px; text-align: center; color: var(--text-2);">
+        No products yet. Click "Add Product" to get started.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADD/EDIT PRODUCT MODAL -->
+<div class="vp-modal" id="product-modal">
+  <div class="vp-modal-content">
+    <div class="vp-modal-title" id="modal-title">Add Product</div>
+
+    <div class="vp-form-group">
+      <label class="vp-form-label">Product Name</label>
+      <input type="text" class="vp-form-input" id="product-name" placeholder="e.g. Fresh Tomatoes - 5kg">
+      <div class="vp-form-error" id="name-err">Product name is required</div>
+    </div>
+
+    <div class="vp-form-row">
+      <div class="vp-form-group">
+        <label class="vp-form-label">Category</label>
+        <select class="vp-form-select" id="product-category">
+          <option value="">Select category</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Food">Food</option>
+          <option value="Phones">Phones</option>
+          <option value="Beauty">Beauty</option>
+          <option value="Home">Home</option>
+        </select>
+        <div class="vp-form-error" id="category-err">Category is required</div>
+      </div>
+
+      <div class="vp-form-group">
+        <label class="vp-form-label">Price (₦)</label>
+        <input type="number" class="vp-form-input" id="product-price" placeholder="0" min="0">
+        <div class="vp-form-error" id="price-err">Price is required</div>
+      </div>
+    </div>
+
+    <div class="vp-form-group">
+      <label class="vp-form-label">Description</label>
+      <textarea class="vp-form-textarea" id="product-description" placeholder="Describe your product..."></textarea>
+      <div class="vp-form-error" id="desc-err">Description is required (min 10 characters)</div>
+    </div>
+
+    <div class="vp-form-group">
+      <label class="vp-form-label">Product Photo</label>
+      <div class="vp-photo-upload">
+        <label class="vp-photo-label" for="product-photo">
+          <div class="vp-photo-label-icon">📸</div>
+          <div class="vp-photo-label-text">Click to upload</div>
+          <div class="vp-photo-label-sub">or drag and drop</div>
+        </label>
+        <input type="file" class="vp-photo-input" id="product-photo" accept="image/*">
+        <div id="photo-preview-container"></div>
+      </div>
+    </div>
+
+    <div class="vp-modal-buttons">
+      <button class="vp-modal-btn vp-modal-btn-cancel" onclick="closeProductModal()">Cancel</button>
+      <button class="vp-modal-btn vp-modal-btn-save" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div class="vp-modal" id="delete-modal">
+  <div class="vp-modal-content">
+    <div class="vp-modal-title">Delete Product?</div>
+    <p style="color: var(--text-2); margin-bottom: 24px;">
+      Are you sure you want to delete this product? This action cannot be undone.
+    </p>
+    <div class="vp-modal-buttons">
+      <button class="vp-modal-btn vp-modal-btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button class="vp-modal-btn vp-modal-btn-save" style="background: #DC2626;" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/utils/helpers.js"></script>
+<script src="../js/pages/vendor-products.js"></script>
+</body>
+</html>

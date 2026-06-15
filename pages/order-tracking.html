@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Tracking — Vender</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .ot-layout {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+
+    .ot-section { margin-bottom: 32px; }
+    
+    .ot-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ot-h1 {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .ot-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--green-light);
+      color: var(--green-dark);
+    }
+
+    /* TIMELINE */
+    .ot-timeline {
+      position: relative;
+      padding: 20px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+    }
+
+    .ot-timeline-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    .ot-timeline-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .ot-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .ot-step-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 12px;
+      transition: all .3s;
+    }
+
+    .ot-step.active .ot-step-dot {
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(29, 158, 117, 0.3);
+    }
+
+    .ot-step.active .ot-step-dot::after {
+      content: '✓';
+      color: white;
+      font-weight: 700;
+    }
+
+    .ot-step.completed .ot-step-dot {
+      background: var(--green);
+    }
+
+    .ot-step.completed .ot-step-dot::after {
+      content: '✓';
+      color: white;
+      font-weight: 700;
+    }
+
+    .ot-step-label {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .ot-step-sub {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    /* ORDER DETAILS CARD */
+    .ot-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .ot-card-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .ot-card-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ot-card-row:last-child {
+      border-bottom: none;
+    }
+
+    .ot-card-label {
+      color: var(--text-2);
+      font-size: 14px;
+    }
+
+    .ot-card-value {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ITEM CARD */
+    .ot-item-card {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg);
+      border-radius: var(--card-radius);
+    }
+
+    .ot-item-img {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      flex-shrink: 0;
+    }
+
+    .ot-item-info {
+      flex: 1;
+    }
+
+    .ot-item-name {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .ot-item-vendor {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 8px;
+    }
+
+    .ot-item-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    /* ACTIONS */
+    .ot-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .ot-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: var(--font-body);
+    }
+
+    .ot-btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .ot-btn-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .ot-btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .ot-btn-secondary:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .ot-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ESCROW PROTECTION BOX */
+    .ot-escrow-box {
+      background: linear-gradient(135deg, var(--green-light) 0%, rgba(29, 158, 117, 0.05) 100%);
+      border: 1px solid var(--green);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .ot-escrow-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .ot-escrow-text {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    .ot-escrow-text strong {
+      color: var(--green-dark);
+    }
+
+    /* STATUS MESSAGES */
+    .ot-status-message {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .ot-status-info {
+      background: #E0F2FE;
+      color: #0369A1;
+      border-left: 4px solid #0284C7;
+    }
+
+    .ot-status-success {
+      background: #DBEAFE;
+      color: #0645A6;
+      border-left: 4px solid #0284C7;
+    }
+
+    .ot-status-warning {
+      background: var(--orange-light);
+      color: var(--orange);
+      border-left: 4px solid var(--orange);
+    }
+
+    .ot-status-error {
+      background: var(--red-light);
+      color: var(--red);
+      border-left: 4px solid var(--red);
+    }
+
+    /* MODAL */
+    .ot-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ot-modal.open {
+      display: flex;
+    }
+
+    .ot-modal-content {
+      background: white;
+      border-radius: var(--card-radius);
+      padding: 28px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .ot-modal-title {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .ot-modal-text {
+      font-size: 14px;
+      color: var(--text-2);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .ot-modal-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .ot-modal-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .ot-modal-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .ot-modal-btn-cancel {
+      background: var(--bg);
+      color: var(--text-2);
+    }
+
+    .ot-modal-btn-confirm {
+      background: var(--green);
+      color: white;
+    }
+
+    @media (max-width: 640px) {
+      .ot-layout { padding: 16px 12px; }
+      .ot-h1 { font-size: 22px; }
+      .ot-timeline-steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="../index.html">Ven<span>der</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Explore</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="vendors.html">Vendors</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-signin" onclick="window.location.href='login.html'">Sign in</button>
+      <button class="btn-vendor">Become a vendor</button>
+      <button class="cart-btn" onclick="window.location.href='checkout.html'">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M1 1h2l2.4 9.6A2 2 0 007.3 12h6.4a2 2 0 001.9-1.4L17 5H4"/>
+          <circle cx="8" cy="15.5" r="1.5" fill="currentColor"/>
+          <circle cx="14" cy="15.5" r="1.5" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="ot-layout">
+
+  <!-- HEADER -->
+  <div class="ot-header">
+    <div>
+      <div class="ot-h1">Your Order</div>
+      <div style="font-size: 13px; color: var(--text-3); margin-top: 4px;">Order ID: <span id="ot-order-id">ORD-XXXXX</span></div>
+    </div>
+    <div class="ot-status-badge" id="ot-status-badge">
+      <span id="ot-status-icon">⏳</span>
+      <span id="ot-status-text">Pending</span>
+    </div>
+  </div>
+
+  <!-- ITEM CARD -->
+  <div class="ot-section">
+    <div class="ot-item-card" id="ot-item-card">
+      <div class="ot-item-img" id="ot-item-img">📱</div>
+      <div class="ot-item-info">
+        <div class="ot-item-name" id="ot-item-name">Loading...</div>
+        <div class="ot-item-vendor" id="ot-item-vendor">Vendor</div>
+        <div style="font-size: 12px; color: var(--text-3); margin: 8px 0;">
+          <span id="ot-item-category">Category</span> · <span id="ot-item-zone">Zone</span>
+        </div>
+        <div class="ot-item-price" id="ot-item-price">₦0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESCROW PROTECTION -->
+  <div class="ot-section">
+    <div class="ot-escrow-box">
+      <div class="ot-escrow-title">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 1L2 4v4c0 3.5 3 6.5 6 7 3-0.5 6-3.5 6-7V4L8 1z"/>
+        </svg>
+        Your money is protected by Vender's escrow
+      </div>
+      <div class="ot-escrow-text">
+        Your payment is held securely. The vendor only gets paid after you confirm delivery. <strong>If something's wrong, full automatic refund.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="ot-section">
+    <div class="ot-timeline">
+      <div class="ot-timeline-title">Order Progress</div>
+      <div class="ot-timeline-steps" id="ot-timeline-steps">
+        <div class="ot-step" data-step="0">
+          <div class="ot-step-dot">💳</div>
+          <div class="ot-step-label">Payment</div>
+          <div class="ot-step-sub" id="ot-step-sub-0"></div>
+        </div>
+        <div class="ot-step" data-step="1">
+          <div class="ot-step-dot">📦</div>
+          <div class="ot-step-label">Shipped</div>
+          <div class="ot-step-sub" id="ot-step-sub-1"></div>
+        </div>
+        <div class="ot-step" data-step="2">
+          <div class="ot-step-dot">🚚</div>
+          <div class="ot-step-label">Delivery</div>
+          <div class="ot-step-sub" id="ot-step-sub-2"></div>
+        </div>
+        <div class="ot-step" data-step="3">
+          <div class="ot-step-dot">✅</div>
+          <div class="ot-step-label">Complete</div>
+          <div class="ot-step-sub" id="ot-step-sub-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER DETAILS -->
+  <div class="ot-section">
+    <div class="ot-card">
+      <div class="ot-card-title">Order Details</div>
+      <div class="ot-card-row">
+        <span class="ot-card-label">Item Price</span>
+        <span class="ot-card-value" id="ot-price">₦0</span>
+      </div>
+      <div class="ot-card-row">
+        <span class="ot-card-label">Marketplace Fee</span>
+        <span class="ot-card-value" id="ot-fee">₦0</span>
+      </div>
+      <div class="ot-card-row">
+        <span class="ot-card-label">Total Paid</span>
+        <span class="ot-card-value" style="color: var(--green); font-size: 16px;" id="ot-total">₦0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERY ADDRESS -->
+  <div class="ot-section">
+    <div class="ot-card">
+      <div class="ot-card-title">Delivery Address</div>
+      <div style="padding: 12px 0; color: var(--text-2); font-size: 14px; line-height: 1.6;">
+        <div id="ot-delivery-address">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="ot-section">
+    <div class="ot-card">
+      <div class="ot-actions">
+        <button class="ot-btn ot-btn-primary" id="ot-confirm-btn" onclick="openConfirmModal()" style="display:none">
+          ✓ Confirm Delivery
+        </button>
+        <button class="ot-btn ot-btn-secondary" id="ot-dispute-btn" onclick="openDisputeModal()" style="display:none">
+          ⚠️ Report Issue
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONFIRM DELIVERY MODAL -->
+<div class="ot-modal" id="confirm-modal">
+  <div class="ot-modal-content">
+    <div class="ot-modal-title">Confirm Delivery?</div>
+    <div class="ot-modal-text">
+      I confirm that I have received the item in good condition. The vendor will receive their payment immediately.
+    </div>
+    <div class="ot-modal-buttons">
+      <button class="ot-modal-btn ot-modal-btn-cancel" onclick="closeConfirmModal()">Not yet</button>
+      <button class="ot-modal-btn ot-modal-btn-confirm" onclick="confirmDelivery()">Yes, confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- DISPUTE MODAL -->
+<div class="ot-modal" id="dispute-modal">
+  <div class="ot-modal-content">
+    <div class="ot-modal-title">Report Issue</div>
+    <div class="ot-modal-text">
+      What's the problem? This will trigger a full refund to your account.
+    </div>
+    <textarea class="ot-modal-input" id="dispute-reason" placeholder="Item didn't arrive · Item damaged · Wrong item · Other..." rows="3"></textarea>
+    <div class="ot-modal-buttons">
+      <button class="ot-modal-btn ot-modal-btn-cancel" onclick="closeDisputeModal()">Cancel</button>
+      <button class="ot-modal-btn ot-modal-btn-confirm" onclick="submitDispute()">Submit Report</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/data/orders.js"></script>
+<script src="../js/data/orders.js"></script>
+<script src="../js/utils/helpers.js"></script>
+<script src="../js/pages/order-tracking.js"></script>
+</body>
+</html>

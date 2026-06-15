@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become a Vendor — Vender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/become-vendor.css">
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="../index.html">Ven<span>der</span></a>
+  <a class="back-link" href="../index.html">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11L5 7l4-4"/></svg>
+    Back to home
+  </a>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-labels">
+      <div class="progress-label active" id="pl-1">Phone</div>
+      <div class="progress-label" id="pl-2">Store info</div>
+      <div class="progress-label" id="pl-3">Location</div>
+      <div class="progress-label" id="pl-4">How you operate</div>
+      <div class="progress-label" id="pl-5">Verification</div>
+      <div class="progress-label" id="pl-6">Done</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:16.6%"></div>
+    </div>
+    <div class="step-counter" id="step-counter">Step 1 of 6</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- STEP 1: PHONE -->
+  <div class="step active" id="step-1">
+    <div class="step-header">
+      <div class="step-tag">Step 1 of 6</div>
+      <h1 class="step-title">Let's verify your phone number</h1>
+      <p class="step-sub">We'll send a 6-digit code to confirm it's really you.</p>
+    </div>
+    <div class="field">
+      <label>Phone number</label>
+      <div class="phone-row">
+        <input class="phone-prefix" type="text" value="+234" readonly>
+        <input type="tel" class="phone-input" id="phone-input" placeholder="0812 345 6789" maxlength="11" >
+      </div>
+      <div class="error-msg" id="phone-err">Please enter a valid Nigerian phone number</div>
+    </div>
+    <button class="btn-primary" onclick="sendOTP()">Send verification code</button>
+
+    <div class="sending-otp" id="sending-otp">
+      Sending code to your phone...
+    </div>
+
+    <div class="otp-section" id="otp-section">
+      <div class="divider"></div>
+      <p style="font-size:14px;color:var(--text-2);margin-bottom:4px">Enter the 6-digit code sent to <strong id="phone-display"></strong></p>
+      <a class="resend-link" onclick="resendOTP()">Didn't get it? Resend code</a>
+      <div class="otp-row">
+        <input class="otp-input" type="number" maxlength="1"  oninput="otpMove(this,0)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,1)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,2)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,3)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,4)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,5)">
+      </div>
+      <div class="error-msg" id="otp-err">Incorrect code. Try again. (Hint: use 123456)</div>
+      <button class="btn-primary" onclick="verifyOTP()">Verify & continue</button>
+    </div>
+    
+<div class="password-section" id="password-section">
+  <div class="divider"></div>
+  <p style="font-size:14px;color:var(--text-2);margin-bottom:16px">
+    Great! Now create a password for your vendor account.
+  </p>
+  <div class="field">
+    <label>Create password</label>
+    <div class="password-wrap">
+      <input type="password" id="vendor-password" placeholder="At least 8 characters">
+      <button type="button" class="eye-btn" onclick="toggleVendorPass('vendor-password', this)">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/>
+          <circle cx="10" cy="10" r="2.5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="error-msg" id="vendor-pass-err">Password must be at least 8 characters</div>
+  </div>
+  <div class="field">
+    <label>Confirm password</label>
+    <div class="password-wrap">
+      <input type="password" id="vendor-password-confirm" placeholder="Re-enter your password">
+      <button type="button" class="eye-btn" onclick="toggleVendorPass('vendor-password-confirm', this)">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/>
+          <circle cx="10" cy="10" r="2.5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="error-msg" id="vendor-confirm-err">Passwords do not match</div>
+  </div>
+  <button class="btn-primary" onclick="validateStep1Password()">Continue to store setup →</button>
+</div>
+  </div>
+
+  <!-- STEP 2: STORE INFO -->
+  <div class="step" id="step-2">
+    <div class="step-header">
+      <div class="step-tag">Step 2 of 6</div>
+      <h1 class="step-title">Tell us about your store</h1>
+      <p class="step-sub">This is what buyers will see on your vendor profile.</p>
+    </div>
+
+    <div style="text-align:center;margin-bottom:24px">
+      <label class="photo-upload" id="photo-upload-label" onclick="document.getElementById('photo-file').click()">
+        <img id="photo-preview" class="photo-preview" alt="Store photo">
+        <div id="photo-placeholder">
+          <div class="photo-icon">
+            <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="18" height="13" rx="2"/><circle cx="11" cy="12" r="3"/><path d="M8 6l1.5-2h3L14 6"/></svg>
+          </div>
+          <div class="photo-label">Add store photo</div>
+          <div class="photo-sub">Optional — JPG, PNG up to 5MB</div>
+        </div>
+        <input type="file" id="photo-file" accept="image/*" onchange="previewPhoto(this)">
+      </label>
+    </div>
+
+    <div class="field">
+      <label>Store / business name <span>*</span></label>
+      <input type="text" id="store-name" placeholder="e.g. ChiChi Konnect, TechGuru Lagos">
+      <div class="error-msg" id="store-name-err">Please enter your store name</div>
+    </div>
+
+    <div class="field">
+      <label>What do you sell? <span>*</span></label>
+      <select id="store-cat">
+        <option value="">Select a category</option>
+        <option>Fashion & Clothing</option>
+        <option>Electronics</option>
+        <option>Phones & Accessories</option>
+        <option>Food & Groceries</option>
+        <option>Beauty & Skincare</option>
+        <option>Home & Appliances</option>
+        <option>Health & Wellness</option>
+        <option>Books & Stationery</option>
+        <option>Sports & Fitness</option>
+        <option>Baby & Kids</option>
+        <option>Automobiles & Parts</option>
+        <option>Other</option>
+      </select>
+      <div class="error-msg" id="store-cat-err">Please select a category</div>
+    </div>
+
+    <div class="field">
+      <label>Store description <span>*</span></label>
+      <textarea id="store-desc" placeholder="Tell buyers what you sell, where you're based, and what makes your store trustworthy..."></textarea>
+      <div class="hint" id="desc-count">0 / 200 characters</div>
+      <div class="error-msg" id="store-desc-err">Please write a short description (at least 30 characters)</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goStep(1)">Back</button>
+      <button class="btn-primary" onclick="validateStep2()">Continue</button>
+    </div>
+  </div>
+
+ <!-- STEP 3: LOCATION -->
+
+<div class="step" id="step-3">
+  <div class="step-header">
+    <div class="step-tag">Step 3 of 6</div>
+    <h1 class="step-title">Where are you based?</h1>
+    <p class="step-sub">First, tell us where you are. Then choose which areas you can deliver to.</p>
+  </div>
+
+  <!-- STATE -->
+ <div class="field">
+  <label>Your state</label>
+  <select id="vendor-state" onchange="loadZones()">
+    <option value="">Select your state</option>
+    <option value="Abia">Abia</option>
+    <option value="Adamawa">Adamawa</option>
+    <option value="Akwa Ibom">Akwa Ibom</option>
+    <option value="Anambra">Anambra</option>
+    <option value="Bauchi">Bauchi</option>
+    <option value="Bayelsa">Bayelsa</option>
+    <option value="Benue">Benue</option>
+    <option value="Borno">Borno</option>
+    <option value="Cross River">Cross River</option>
+    <option value="Delta">Delta</option>
+    <option value="Ebonyi">Ebonyi</option>
+    <option value="Edo">Edo</option>
+    <option value="Ekiti">Ekiti</option>
+    <option value="Enugu">Enugu</option>
+    <option value="Gombe">Gombe</option>
+    <option value="Imo">Imo</option>
+    <option value="Jigawa">Jigawa</option>
+    <option value="Kaduna">Kaduna</option>
+    <option value="Kano">Kano</option>
+    <option value="Katsina">Katsina</option>
+    <option value="Kebbi">Kebbi</option>
+    <option value="Kogi">Kogi</option>
+    <option value="Kwara">Kwara</option>
+    <option value="Lagos">Lagos</option>
+    <option value="Nasarawa">Nasarawa</option>
+    <option value="Niger">Niger</option>
+    <option value="Abuja (FCT)">Abuja (FCT)</option>
+    <option value="Ogun">Ogun</option>
+    <option value="Ondo">Ondo</option>
+    <option value="Osun">Osun</option>
+    <option value="Oyo">Oyo</option>
+    <option value="Plateau">Plateau</option>
+    <option value="Rivers">Rivers</option>
+    <option value="Sokoto">Sokoto</option>
+    <option value="Taraba">Taraba</option>
+    <option value="Yobe">Yobe</option>
+    <option value="Zamfara">Zamfara</option>
+  </select>
+</div>
+
+  <!-- ZONE — hidden until state is picked -->
+  <div class="field" id="zone-field" style="display:none">
+    <label>Your area / zone</label>
+    <select id="vendor-zone" onchange="loadNeighbourhoods()">
+      <option value="">Select your zone</option>
+    </select>
+  </div>
+
+  <!-- NEIGHBOURHOOD — hidden until zone is picked -->
+  <div class="field" id="hood-field" style="display:none">
+    <label>Your neighbourhood</label>
+    <select id="vendor-hood" onchange="showDeliveryZones()">
+      <option value="">Select your neighbourhood</option>
+    </select>
+    <div class="hint">This is where you are physically based / where buyers pick up from</div>
+  </div>
+
+  <!-- ERROR MESSAGE -->
+  <div class="error-msg" id="loc-err" style="margin-bottom:12px"></div>
+
+  <!-- DELIVERY ZONES — hidden until neighbourhood is picked -->
+  <div id="delivery-zones-section" style="display:none">
+    <div class="divider"></div>
+    <label style="font-size:14px;font-weight:600;display:block;margin-bottom:4px">
+      Which areas do you deliver to?
+      <span style="color:var(--text-3);font-weight:400;font-size:12px">*</span>
+    </label>
+    <p style="font-size:13px;color:var(--text-2);margin-bottom:12px;line-height:1.5">
+      Buyers in these areas will see your products. Your own zone is already ticked — add any extra areas you can reach.
+    </p>
+    <div class="zones-wrap" id="zones-wrap"></div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row" style="margin-top:24px">
+    <button class="btn-secondary" onclick="goStep(2)">Back</button>
+    <button class="btn-primary" onclick="validateStep3()">Continue</button>
+  </div>
+</div>
+
+
+<!-- STEP 4: HOW YOU OPERATE -->
+
+  <div class="step" id="step-4">
+    <div class="step-header">
+      <div class="step-tag">Step 4 of 6</div>
+      <h1 class="step-title">How do you operate?</h1>
+      <p class="step-sub">You can select more than one. Each mode shows a different badge on your products so buyers know what to expect.</p>
+    </div>
+
+    <div class="op-note">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5L10 10"/></svg>
+      Badges are earned — not just declared. The system tracks your actual performance and adjusts your badges automatically over time.
+    </div>
+
+    <!-- MODE 1: IN STOCK -->
+    <div class="op-card" id="op-stock" onclick="toggleMode('stock')">
+      <div class="op-card-top">
+        <div class="op-check" id="check-stock">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        <div class="op-card-head">
+          <div class="op-title">I sell from stock</div>
+          <span class="op-badge op-badge-green">Fast orders</span>
+        </div>
+      </div>
+      <div class="op-desc">I already have the items I sell. I can pack and dispatch within 24 hours of receiving an order.</div>
+      <div class="op-rule">
+        <div class="op-rule-row">
+          <span class="op-rule-label">Dispatch deadline</span>
+          <span class="op-rule-val">Within 24 hours</span>
+        </div>
+        <div class="op-rule-row">
+          <span class="op-rule-label">Auto-downgrade if</span>
+          <span class="op-rule-val">Avg dispatch &gt; 48hrs over 10 orders</span>
+        </div>
+      </div>
+      <div class="op-proof" id="proof-stock">
+        <div class="op-proof-title">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M4 3V2m6 1V2M1 6h12"/></svg>
+          Proof required to earn this badge
+        </div>
+        <p class="op-proof-sub">Upload at least 3 photos of actual items you currently have in stock. No stock photos — real photos only. Our team will review before approving this badge.</p>
+        
+        <!-- stopPropagation on the div AND the input -->
+        <div class="proof-upload-area" id="stock-upload-area" 
+          onclick="event.stopPropagation(); document.getElementById('stock-photos').click()">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="2" y="6" width="18" height="13" rx="2"/><circle cx="11" cy="12" r="3"/><path d="M8 6l1.5-2h3L14 6"/></svg>
+          <span>Upload stock photos (min. 3)</span>
+          <span class="proof-upload-sub">JPG or PNG, max 5MB each</span>
+          <input type="file" id="stock-photos" accept="image/*" multiple 
+            onclick="event.stopPropagation()" 
+            onchange="handleStockPhotos(this)">
+        </div>
+        <div class="proof-thumbs" id="stock-thumbs"></div>
+        <div class="error-msg" id="stock-photo-err">Please upload at least 3 photos of your stock</div>
+      </div>
+    </div>
+
+    <!-- MODE 2: SOURCE ON ORDER -->
+    <div class="op-card" id="op-source" onclick="toggleMode('source')">
+      <div class="op-card-top">
+        <div class="op-check" id="check-source">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        <div class="op-card-head">
+          <div class="op-title">I source on order</div>
+          <span class="op-badge op-badge-orange">Order on demand</span>
+        </div>
+      </div>
+      <div class="op-desc">I go to the market to buy the item after a customer orders. I need up to 48 hours to source and dispatch.</div>
+      <div class="op-rule">
+        <div class="op-rule-row">
+          <span class="op-rule-label">Confirm availability</span>
+          <span class="op-rule-val">Within 6 hours of order</span>
+        </div>
+        <div class="op-rule-row">
+          <span class="op-rule-label">Dispatch deadline</span>
+          <span class="op-rule-val">Within 48 hours of confirmation</span>
+        </div>
+        <div class="op-rule-row">
+          <span class="op-rule-label">Miss deadline =</span>
+          <span class="op-rule-val red-val">Auto refund + 1 strike</span>
+        </div>
+      </div>
+      <div class="op-proof" id="proof-source">
+        <div class="op-proof-title">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 1.5"/></svg>
+          How escrow works for this mode
+        </div>
+        <div class="escrow-steps-mini">
+          <div class="esm-row">
+            <div class="esm-num">1</div>
+            <div class="esm-text">Buyer pays — full amount held in escrow by Vender</div>
+          </div>
+          <div class="esm-row">
+            <div class="esm-num">2</div>
+            <div class="esm-text">You confirm you found the item within 6 hours</div>
+          </div>
+          <div class="esm-row">
+            <div class="esm-num">3</div>
+            <div class="esm-text">70% released to you so you can go buy the item</div>
+          </div>
+          <div class="esm-row">
+            <div class="esm-num">4</div>
+            <div class="esm-text">You dispatch within 48 hours</div>
+          </div>
+          <div class="esm-row">
+            <div class="esm-num">5</div>
+            <div class="esm-text">Buyer confirms delivery — remaining 30% released to you</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 3: CUSTOM / MADE TO ORDER -->
+    <div class="op-card" id="op-custom" onclick="toggleMode('custom')">
+      <div class="op-card-top">
+        <div class="op-check" id="check-custom">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        <div class="op-card-head">
+          <div class="op-title">I make / customize on order</div>
+          <span class="op-badge op-badge-purple">Custom made</span>
+        </div>
+      </div>
+      <div class="op-desc">I create or customize the item specifically for each buyer — tailoring, baking, furniture, engravings, etc. Delivery time depends on the item.</div>
+      <div class="op-rule">
+        <div class="op-rule-row">
+          <span class="op-rule-label">Production deadline</span>
+          <span class="op-rule-val">You set per product listing</span>
+        </div>
+        <div class="op-rule-row">
+          <span class="op-rule-label">Auto-downgrade if</span>
+          <span class="op-rule-val">Buyer satisfaction &lt; 80% over 10 orders</span>
+        </div>
+      </div>
+      <div class="op-proof" id="proof-custom">
+        <div class="op-proof-title">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M4 3V2m6 1V2M1 6h12"/></svg>
+          Portfolio required to earn this badge
+        </div>
+        <p class="op-proof-sub">Upload examples of your past work so buyers can see your quality. Minimum 3 examples. These will show on your vendor profile.</p>
+
+        <!-- FIXED: all content is properly inside this div -->
+        <div class="proof-upload-area" id="custom-upload-area" 
+          onclick="event.stopPropagation(); document.getElementById('custom-portfolio').click()">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="2" y="6" width="18" height="13" rx="2"/><circle cx="11" cy="12" r="3"/><path d="M8 6l1.5-2h3L14 6"/></svg>
+          <span>Upload portfolio photos (min. 3)</span>
+          <span class="proof-upload-sub">JPG or PNG, max 5MB each</span>
+          <input type="file" id="custom-portfolio" accept="image/*" multiple 
+            onclick="event.stopPropagation()" 
+            onchange="handleCustomPhotos(this)">
+        </div>
+
+        <div class="proof-thumbs" id="custom-thumbs"></div>
+
+        <div class="field" style="margin-top:12px" onclick="event.stopPropagation()">
+          <label>Describe what you make / customize</label>
+          <textarea id="custom-desc" 
+            onclick="event.stopPropagation()" 
+            placeholder="e.g. I'm a tailor specialising in Ankara suits and dresses. I take measurements online via video call and deliver within 7 days..."></textarea>
+        </div>
+        <div class="error-msg" id="custom-proof-err">Please upload at least 3 portfolio photos</div>
+      </div>
+    </div>
+
+    <!-- PERFORMANCE NOTE -->
+    <div class="performance-note">
+      <div class="perf-title">How badge enforcement works</div>
+      <div class="perf-body">
+        After every completed order, Vender silently tracks your actual performance against your declared mode. If your behavior consistently doesn't match — e.g. you claimed "In stock" but always take 3+ days to dispatch — your badge is automatically downgraded. You'll receive a warning first. You can always re-earn a badge by improving your performance.
+      </div>
+    </div>
+
+    <div class="error-msg" id="op-err" style="margin-top:4px">Please select at least one mode</div>
+
+    <div class="agree-row" onclick="event.stopPropagation(); toggleAgree4()">
+      <input type="checkbox" id="agree-check-4" onclick="event.stopPropagation()">
+      <div class="agree-text">
+        <strong>I understand how each mode works</strong> including the escrow rules, deadlines, and automatic badge enforcement. I agree to operate honestly and within the rules of each mode I select.
+      </div>
+    </div>
+    <div class="error-msg" id="agree4-err">You must confirm to continue</div>
+
+    <div class="btn-row" style="margin-top:24px">
+      <button class="btn-secondary" onclick="goStep(3)">Back</button>
+      <button class="btn-primary" onclick="validateStep4()">I understand, continue</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: VERIFICATION -->
+  <div class="step" id="step-5">
+    <div class="step-header">
+      <div class="step-tag">Step 5 of 6</div>
+      <h1 class="step-title">Verify your identity</h1>
+      <p class="step-sub">This is how we protect buyers and keep scammers off the platform.</p>
+    </div>
+
+    <div class="kyc-note">
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 1L2 5v5c0 4 3.1 7.7 7 8.5 3.9-.8 7-4.5 7-8.5V5L9 1z"/></svg>
+      <div>Your BVN is used <strong>only to verify your identity</strong>. We never share it, store it in plain text, or use it for anything else. It is encrypted immediately.</div>
+    </div>
+
+    <div class="field">
+      <label>Bank Verification Number (BVN)</label>
+      <input type="number" id="bvn-input" placeholder="Enter your 11-digit BVN" maxlength="11">
+      <div class="hint">Dial *565*0# on your registered phone number to get your BVN</div>
+      <div class="error-msg" id="bvn-err">BVN must be 11 digits</div>
+    </div>
+
+    <div class="field">
+      <label>National ID Number (NIN) <span>Optional but speeds up verification</span></label>
+      <input type="number" id="nin-input" placeholder="Enter your 11-digit NIN">
+      <div class="hint">Dial *346# to get your NIN</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>Bank account for payouts</label>
+      <div class="bank-row">
+        <select id="bank-select" onchange="checkAccount()">
+          <option value="">Select bank</option>
+          <option>Access Bank</option>
+          <option>First Bank</option>
+          <option>GTBank</option>
+          <option>UBA</option>
+          <option>Zenith Bank</option>
+          <option>Kuda Bank</option>
+          <option>OPay</option>
+          <option>PalmPay</option>
+          <option>Moniepoint</option>
+          <option>Wema Bank</option>
+          <option>Fidelity Bank</option>
+          <option>Sterling Bank</option>
+          <option>Union Bank</option>
+          <option>Polaris Bank</option>
+          <option>FCMB</option>
+          <option>Stanbic IBTC</option>
+          <option>Ecobank</option>
+        </select>
+        <input type="number" id="account-number" placeholder="Account number" maxlength="10" oninput="checkAccount()">
+      </div>
+      <div class="account-verify" id="account-verify">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l4 4 6-6"/></svg>
+        <span id="account-name">Chidi Okafor — GTBank</span>
+      </div>
+      <div class="error-msg" id="bank-err">Please select a bank and enter your 10-digit account number</div>
+    </div>
+
+    <div class="agree-row" onclick="toggleAgree()">
+      <input type="checkbox" id="agree-check">
+      <div class="agree-text">
+        <strong>I confirm that all information I have provided is accurate and belongs to me.</strong> I understand that providing false information or engaging in fraudulent activity will result in permanent removal from Vender and may be reported to appropriate authorities.
+      </div>
+    </div>
+    <div class="error-msg" id="agree-err">You must confirm to continue</div>
+
+    <div class="btn-row" style="margin-top:20px">
+      <button class="btn-secondary" onclick="goStep(4)">Back</button>
+      <button class="btn-primary" onclick="validateStep5()">Submit for review</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: DONE -->
+  <div class="step" id="step-6">
+    <div class="success-screen">
+      <div class="success-circle">
+        <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 18l8 8L30 10"/></svg>
+      </div>
+      <h1 class="success-title">You're in, <span id="vendor-firstname" style="color:var(--green)">Chidi</span>!</h1>
+      <p class="success-sub">Your application has been submitted. Here's what happens next.</p>
+
+      <div class="status-card">
+        <div class="status-row">
+          <div class="status-icon" style="background:var(--orange-light)">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#92400E" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.5 2"/></svg>
+          </div>
+          <div>
+            <div class="status-label">Under review</div>
+            <div class="status-sub">We're verifying your BVN and details</div>
+          </div>
+        </div>
+        <div class="what-next">
+          <strong>What happens next:</strong>
+          You'll receive an SMS within <strong>24 hours</strong> confirming your verification. Once verified, your store goes live and you can start receiving orders. You can set up your products right now while you wait.
+        </div>
+      </div>
+
+      <div class="status-card" style="text-align:left">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px">While you wait, you can:</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-2)">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--green)" stroke-width="1.5"><rect x="1" y="3" width="12" height="9" rx="1"/><path d="M4 3V2m6 1V2M1 6h12"/></svg>
+            </div>
+            Add your products and set prices
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-2)">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--green)" stroke-width="1.5"><circle cx="7" cy="5" r="3"/><path d="M2 12a5 5 0 0110 0"/></svg>
+            </div>
+            Complete your store profile
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-2)">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M7 1l1.8 3.6L13 5.3l-3 2.9.7 4.1L7 10.2l-3.7 2.1.7-4.1-3-2.9 4.2-.7z"/></svg>
+            </div>
+            Share your store link with customers
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="goToDashboard()" style="margin-bottom:10px">Set up my store</button>
+      <button class="btn-secondary" onclick="window.location.href='../index.html'">Go to home page</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="../js/pages/become-vendor.js" ></script>
+<script src="../js/auth/vendor-location.js" ></script>
+</body>
+</html>

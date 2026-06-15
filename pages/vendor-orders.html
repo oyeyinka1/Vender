@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders — Vender Vendor Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/vendor-orders.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="../index.html">Ven<span>der</span></a>
+    <ul class="nav-links">
+      <li><a href="/pages/vendor-orders.html" style="color: var(--green); font-weight: 600;">Orders</a></li>
+      <li><a href="/pages/vendor-products.html">Products</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-signin" onclick="logout()" style="background: var(--red-light); color: var(--red);">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<div class="vd-layout">
+
+  <!-- HEADER -->
+  <div class="vd-header">
+    <div>
+      <div class="vd-title">My Orders</div>
+      <p style="color: var(--text-3); font-size: 14px; margin-top: 4px;">Manage your sales and track payments</p>
+    </div>
+    <div class="vd-user">
+      <div class="vd-user-avatar" id="vd-avatar">V</div>
+      <div>
+        <div class="vd-user-name" id="vd-vendor-name">Your Vendor</div>
+        <div style="font-size: 12px; color: var(--text-3);">Vendor Dashboard</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="vd-stats-grid" id="vd-stats">
+    <div class="vd-stat-card">
+      <div class="vd-stat-label">Total Orders</div>
+      <div class="vd-stat-value" id="stat-total">0</div>
+      <div class="vd-stat-sub">All time</div>
+    </div>
+    <div class="vd-stat-card">
+      <div class="vd-stat-label">Pending Orders</div>
+      <div class="vd-stat-value" id="stat-pending">0</div>
+      <div class="vd-stat-sub">Awaiting payment confirmation</div>
+    </div>
+    <div class="vd-stat-card">
+      <div class="vd-stat-label">Shipped Orders</div>
+      <div class="vd-stat-value" id="stat-shipped">0</div>
+      <div class="vd-stat-sub">In transit</div>
+    </div>
+    <div class="vd-stat-card">
+      <div class="vd-stat-label">Total Earnings</div>
+      <div class="vd-stat-value" id="stat-earnings" style="color: var(--green);">₦0</div>
+      <div class="vd-stat-sub">Completed orders</div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="vd-filters">
+    <div class="vd-filter active" onclick="filterOrders('all')">All Orders</div>
+    <div class="vd-filter" onclick="filterOrders('pending')">Pending</div>
+    <div class="vd-filter" onclick="filterOrders('shipped')">Shipped</div>
+    <div class="vd-filter" onclick="filterOrders('completed')">Completed</div>
+    <div class="vd-filter" onclick="filterOrders('disputed')">Disputed</div>
+  </div>
+
+  <!-- ORDERS TABLE -->
+  <div class="vd-table">
+    <div class="vd-table-head">
+      <div>Item</div>
+      <div>Status</div>
+      <div>Buyer</div>
+      <div>Amount</div>
+      <div>Action</div>
+    </div>
+    <div id="vd-table-body">
+      <div style="padding: 60px 20px; text-align: center; color: var(--text-2);">
+        No orders yet. Once buyers start purchasing, they'll appear here.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SHIP MODAL -->
+<div class="vd-modal" id="ship-modal">
+  <div class="vd-modal-content">
+    <div class="vd-modal-title">Mark as Shipped</div>
+    <div class="vd-modal-text">
+      Add a tracking number (optional). The buyer will see their order is on the way.
+    </div>
+    <input type="text" class="vd-modal-input" id="tracking-input" placeholder="e.g. GIG-123456789">
+    <div class="vd-modal-buttons">
+      <button class="vd-modal-btn vd-modal-btn-cancel" onclick="closeShipModal()">Cancel</button>
+      <button class="vd-modal-btn vd-modal-btn-confirm" onclick="confirmShip()">Mark Shipped</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/data/orders.js"></script>
+<script src="../js/utils/helpers.js"></script>
+<script src="../js/pages/vendor-orders.js"></script>
+</body>
+</html>

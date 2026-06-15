@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — Vender</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/checkout.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="co-nav">
+    <div class="co-nav-inner">
+      <a class="logo" href="../index.html">Ven<span>der</span></a>
+      <div class="co-nav-right">
+        <div class="secure-badge">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M7 1L2 4v4c0 2.8 2.1 5.4 5 6 2.9-.6 5-3.2 5-6V4L7 1z"/>
+          </svg>
+          Secure checkout
+        </div>
+        <a class="back-link" href="javascript:history.back()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 11L5 7l4-4"/>
+          </svg>
+          Back
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="co-layout">
+
+    <!-- LEFT COLUMN -->
+    <div class="co-left">
+
+      <!-- ORDER SUMMARY -->
+      <div class="co-section">
+        <div class="co-section-title">Your order</div>
+        <div class="co-card" id="order-summary">
+          <!-- Populated by JS from sessionStorage/URL params -->
+          <div class="order-row">
+            <div class="order-img" id="order-img">🍅</div>
+            <div class="order-info">
+              <div class="order-name" id="order-name">Fresh Tomatoes — 5kg box</div>
+              <div class="order-vendor" id="order-vendor">FreshPick Foods · Verified</div>
+              <div class="order-mode" id="order-mode"></div>
+            </div>
+            <div class="order-price" id="order-price">₦3,200</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHO IS THIS FOR -->
+      <div class="co-section">
+        <div class="co-section-title">Who is this for?</div>
+        <div class="delivery-tabs">
+          <div class="dtab active" id="tab-me" onclick="switchDelivery('me')">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 1C6.2 1 4 3.2 4 6c0 4 5 11 5 11s5-7 5-11c0-2.8-2.2-5-5-5z"/>
+              <circle cx="9" cy="6" r="2"/>
+            </svg>
+            <div>
+              <div class="dtab-label">For me</div>
+              <div class="dtab-sub">Deliver to my address</div>
+            </div>
+          </div>
+          <div class="dtab" id="tab-someone" onclick="switchDelivery('someone')">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 2l1.8 3.6L15 6.6l-3 2.9.7 4.2L9 11.5l-3.7 2.2.7-4.2-3-2.9 4.2-.7z"/>
+            </svg>
+            <div>
+              <div class="dtab-label">Surprise someone</div>
+              <div class="dtab-sub">Send to another address</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOR ME: SAVED ADDRESSES -->
+        <div id="panel-me">
+          <div class="co-card">
+            <div class="addr-list" id="addr-list">
+              <div class="addr-item selected" onclick="selectAddr(this)" data-id="home">
+                <div class="addr-radio"><div class="addr-radio-dot"></div></div>
+                <div class="addr-body">
+                  <div class="addr-name">
+                    Home
+                    <span class="addr-default-badge">Default</span>
+                  </div>
+                  <div class="addr-detail" id="saved-addr-1">Loading your saved address...</div>
+                </div>
+              </div>
+            </div>
+            <div class="add-addr-btn" onclick="toggleNewAddr()">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="7" cy="7" r="5"/>
+                <path d="M7 4v6M4 7h6"/>
+              </svg>
+              Add new address
+            </div>
+          </div>
+
+          <!-- NEW ADDRESS FORM (hidden by default) -->
+          <div class="new-addr-form co-card" id="new-addr-form" style="display:none">
+            <div class="form-title">New delivery address</div>
+            <div class="field-row">
+              <div class="field">
+                <label>State</label>
+                <select id="new-state" onchange="loadNewZones()">
+                  <option value="">Select state</option>
+                  <option value="Abia">Abia</option>
+                  <option value="Adamawa">Adamawa</option>
+                  <option value="Akwa Ibom">Akwa Ibom</option>
+                  <option value="Anambra">Anambra</option>
+                  <option value="Bauchi">Bauchi</option>
+                  <option value="Bayelsa">Bayelsa</option>
+                  <option value="Benue">Benue</option>
+                  <option value="Borno">Borno</option>
+                  <option value="Cross River">Cross River</option>
+                  <option value="Delta">Delta</option>
+                  <option value="Ebonyi">Ebonyi</option>
+                  <option value="Edo">Edo</option>
+                  <option value="Ekiti">Ekiti</option>
+                  <option value="Enugu">Enugu</option>
+                  <option value="Gombe">Gombe</option>
+                  <option value="Imo">Imo</option>
+                  <option value="Jigawa">Jigawa</option>
+                  <option value="Kaduna">Kaduna</option>
+                  <option value="Kano">Kano</option>
+                  <option value="Katsina">Katsina</option>
+                  <option value="Kebbi">Kebbi</option>
+                  <option value="Kogi">Kogi</option>
+                  <option value="Kwara">Kwara</option>
+                  <option value="Lagos">Lagos</option>
+                  <option value="Nasarawa">Nasarawa</option>
+                  <option value="Niger">Niger</option>
+                  <option value="Abuja (FCT)">Abuja (FCT)</option>
+                  <option value="Ogun">Ogun</option>
+                  <option value="Ondo">Ondo</option>
+                  <option value="Osun">Osun</option>
+                  <option value="Oyo">Oyo</option>
+                  <option value="Plateau">Plateau</option>
+                  <option value="Rivers">Rivers</option>
+                  <option value="Sokoto">Sokoto</option>
+                  <option value="Taraba">Taraba</option>
+                  <option value="Yobe">Yobe</option>
+                  <option value="Zamfara">Zamfara</option>
+                </select>
+              </div>
+              <div class="field" id="new-zone-field" style="display:none">
+                <label>Zone</label>
+                <select id="new-zone" onchange="loadNewHoods()">
+                  <option value="">Select zone</option>
+                </select>
+              </div>
+            </div>
+            <div class="field" id="new-hood-field" style="display:none">
+              <label>Neighbourhood</label>
+              <select id="new-hood">
+                <option value="">Select neighbourhood</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Street address</label>
+              <input type="text" id="new-street" placeholder="e.g. 14 Bola Ajibola Street">
+            </div>
+            <div class="field-row">
+              <button class="btn-cancel" onclick="toggleNewAddr()">Cancel</button>
+              <button class="btn-save-addr" onclick="saveNewAddr()">Save address</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SURPRISE SOMEONE PANEL -->
+        <div id="panel-someone" style="display:none">
+          <div class="surprise-banner">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 2l1.8 3.6L14 6.5l-3 2.9.7 4.2L8 11.5l-3.7 2.1.7-4.2-3-2.9 4.2-.7z"/>
+            </svg>
+            You're sending a surprise! The vendor will only see "Gift delivery" — your name stays hidden.
+          </div>
+
+          <div class="co-card">
+            <div class="form-title">Recipient details</div>
+            <div class="field-row">
+              <div class="field">
+                <label>Recipient's name <span class="req">*</span></label>
+                <input type="text" id="recipient-name" placeholder="Who is this for?">
+                <div class="error-msg" id="recipient-name-err">Required</div>
+              </div>
+              <div class="field">
+                <label>Their phone number <span class="req">*</span></label>
+                <input type="tel" id="recipient-phone" placeholder="080x xxx xxxx" inputmode="numeric">
+                <div class="error-msg" id="recipient-phone-err">Required</div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="form-title" style="margin-bottom:14px">Their delivery address</div>
+
+            <div class="field-row">
+              <div class="field">
+                <label>State <span class="req">*</span></label>
+                <select id="surp-state" onchange="loadSurpZones()">
+                  <option value="">Select state</option>
+                  <option value="Abia">Abia</option>
+                  <option value="Adamawa">Adamawa</option>
+                  <option value="Akwa Ibom">Akwa Ibom</option>
+                  <option value="Anambra">Anambra</option>
+                  <option value="Bauchi">Bauchi</option>
+                  <option value="Bayelsa">Bayelsa</option>
+                  <option value="Benue">Benue</option>
+                  <option value="Borno">Borno</option>
+                  <option value="Cross River">Cross River</option>
+                  <option value="Delta">Delta</option>
+                  <option value="Ebonyi">Ebonyi</option>
+                  <option value="Edo">Edo</option>
+                  <option value="Ekiti">Ekiti</option>
+                  <option value="Enugu">Enugu</option>
+                  <option value="Gombe">Gombe</option>
+                  <option value="Imo">Imo</option>
+                  <option value="Jigawa">Jigawa</option>
+                  <option value="Kaduna">Kaduna</option>
+                  <option value="Kano">Kano</option>
+                  <option value="Katsina">Katsina</option>
+                  <option value="Kebbi">Kebbi</option>
+                  <option value="Kogi">Kogi</option>
+                  <option value="Kwara">Kwara</option>
+                  <option value="Lagos">Lagos</option>
+                  <option value="Nasarawa">Nasarawa</option>
+                  <option value="Niger">Niger</option>
+                  <option value="Abuja (FCT)">Abuja (FCT)</option>
+                  <option value="Ogun">Ogun</option>
+                  <option value="Ondo">Ondo</option>
+                  <option value="Osun">Osun</option>
+                  <option value="Oyo">Oyo</option>
+                  <option value="Plateau">Plateau</option>
+                  <option value="Rivers">Rivers</option>
+                  <option value="Sokoto">Sokoto</option>
+                  <option value="Taraba">Taraba</option>
+                  <option value="Yobe">Yobe</option>
+                  <option value="Zamfara">Zamfara</option>
+                </select>
+              </div>
+              <div class="field" id="surp-zone-field" style="display:none">
+                <label>Zone <span class="req">*</span></label>
+                <select id="surp-zone" onchange="loadSurpHoods()">
+                  <option value="">Select zone</option>
+                </select>
+              </div>
+            </div>
+            <div class="field" id="surp-hood-field" style="display:none">
+              <label>Neighbourhood <span class="req">*</span></label>
+              <select id="surp-hood">
+                <option value="">Select neighbourhood</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Street address <span class="req">*</span></label>
+              <input type="text" id="surp-street" placeholder="e.g. 5 Aminu Kano Crescent, Wuse 2">
+              <div class="error-msg" id="surp-street-err">Please enter a street address</div>
+            </div>
+
+            <div class="diff-state-note" id="diff-state-note" style="display:none">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="7" cy="7" r="5"/><path d="M7 4v3.5L9 9"/>
+              </svg>
+              <span id="diff-state-text">This delivery is going to a different state. We'll find you vendors in that area.</span>
+            </div>
+
+            <div class="surprise-check-row" onclick="toggleSurpriseCheck()">
+              <input type="checkbox" id="hide-sender" checked onclick="event.stopPropagation()">
+              <label for="hide-sender">Keep it a surprise — hide my name from the vendor and delivery note</label>
+            </div>
+
+            <div class="field" style="margin-top:12px">
+              <label>Gift message <span style="color:var(--text-3);font-weight:400;font-size:12px">(optional)</span></label>
+              <textarea id="gift-message" placeholder="Add a personal note to include with the delivery..." rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENT METHOD -->
+      <div class="co-section">
+        <div class="co-section-title">Payment method</div>
+        <div class="co-card" style="padding:12px 16px">
+          <div class="pay-opt selected" id="pay-card" onclick="selectPay('card')">
+            <div class="pay-radio"><div class="pay-dot"></div></div>
+            <div class="pay-info">
+              <div class="pay-label">Card / Bank transfer</div>
+              <div class="pay-sub">Powered by Paystack · all cards accepted</div>
+            </div>
+            <div class="pay-logos">
+              <span class="pay-logo">Visa</span>
+              <span class="pay-logo">GTB</span>
+            </div>
+          </div>
+          <div class="pay-opt" id="pay-transfer" onclick="selectPay('transfer')">
+            <div class="pay-radio"><div class="pay-dot"></div></div>
+            <div class="pay-info">
+              <div class="pay-label">Bank transfer</div>
+              <div class="pay-sub">Direct transfer to Vender escrow account</div>
+            </div>
+          </div>
+          <div class="pay-opt" id="pay-delivery" onclick="selectPay('delivery')">
+            <div class="pay-radio"><div class="pay-dot"></div></div>
+            <div class="pay-info">
+              <div class="pay-label">Pay on delivery</div>
+              <div class="pay-sub">Cash or transfer to rider on arrival</div>
+            </div>
+          </div>
+        </div>
+        <div class="pod-note" id="pod-note" style="display:none">
+          Pay on delivery is not available for surprise deliveries or order-on-demand vendors.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN — ORDER TOTAL -->
+    <div class="co-right">
+      <div class="co-card co-summary-card">
+        <div class="summary-title">Order summary</div>
+
+        <div class="summary-row">
+          <span>Item price</span>
+          <span id="sum-item">₦3,200</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery fee</span>
+          <span id="sum-delivery">₦1,500</span>
+        </div>
+        <div class="summary-row">
+          <span>Service fee (6%)</span>
+          <span id="sum-service">₦192</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row summary-total">
+          <span>Total</span>
+          <span id="sum-total">₦4,892</span>
+        </div>
+
+        <!-- ESCROW STEPS -->
+        <div class="escrow-box">
+          <div class="escrow-box-title">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M7 1L2 4v4c0 2.8 2.1 5.4 5 6 2.9-.6 5-3.2 5-6V4L7 1z"/>
+            </svg>
+            Your money is protected
+          </div>
+          <div class="escrow-steps">
+            <div class="escrow-step"><div class="escrow-num">1</div><div class="escrow-text">You pay — Vender holds the funds</div></div>
+            <div class="escrow-step"><div class="escrow-num">2</div><div class="escrow-text">Vendor dispatches your item</div></div>
+            <div class="escrow-step"><div class="escrow-num">3</div><div class="escrow-text">You confirm delivery</div></div>
+            <div class="escrow-step escrow-step-refund"><div class="escrow-num escrow-num-red">!</div><div class="escrow-text">Problem? <strong>Full automatic refund.</strong> No calls needed.</div></div>
+          </div>
+        </div>
+
+        <button class="btn-pay" id="pay-btn" onclick="handlePay()">
+          Pay <span id="pay-btn-amount">₦4,892</span> securely
+        </button>
+
+        <div class="cancel-note">
+          You can cancel for free before the vendor confirms your order
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../data/locations.js"></script>
+  <script src="../js/data/orders.js"></script>
+  <script src="../js/utils/helpers.js"></script>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script src="../js/payment/paystack-handlers.js"></script>
+  <script src="../js/pages/checkout.js"></script>
+</body>
+</html>

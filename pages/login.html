@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Vender</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="../index.html">Ven<span>der</span></a>
+  <a class="back-link" href="../index.html">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11L5 7l4-4"/></svg>
+    Back to home
+  </a>
+</div>
+
+<div class="main">
+
+  <!-- ROLE TABS -->
+  <div class="role-tabs" id="role-tabs">
+    <button class="role-tab active" onclick="selectRole('buyer', this)">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="7" r="3"/><path d="M4 16a3 3 0 013-3h6a3 3 0 013 3v1H4z"/></svg>
+      Buyer
+    </button>
+    <button class="role-tab" onclick="selectRole('vendor', this)">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="1"/><path d="M7 10h6M10 7v6"/></svg>
+      Vendor
+    </button>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Welcome back</h1>
+      <p id="login-sub">Sign in to your buyer account and continue shopping</p>
+    </div>
+
+    <!-- EMAIL/PHONE INPUT -->
+    <div class="field">
+      <label>Email or phone number</label>
+      <input type="text" id="email-input" placeholder="you@example.com or +234812345678">
+      <div class="error-msg" id="email-err">Please enter a valid email or phone number</div>
+    </div>
+
+    <!-- PASSWORD INPUT -->
+    <div class="field">
+      <label>Password</label>
+      <div class="password-input-wrap">
+        <input type="password" id="password-input" placeholder="Enter your password">
+        <button type="button" class="password-toggle" onclick="togglePassword()">
+          <svg class="eye-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4C5 4 1 8.5 1 10s4 6 9 6 9-4.5 9-6-4-6-9-6z"/><circle cx="10" cy="10" r="2.5"/></svg>
+        </button>
+      </div>
+      <div class="error-msg" id="password-err">Incorrect password</div>
+    </div>
+
+    <!-- REMEMBER ME + FORGOT PASSWORD -->
+    <div class="form-bottom">
+      <label class="remember-me">
+        <input type="checkbox" id="remember-check">
+        <span>Keep me signed in</span>
+      </label>
+      <a href="#" class="forgot-link" onclick="showForgotPassword(event)">Forgot password?</a>
+    </div>
+
+    <!-- SIGN IN BUTTON -->
+    <button class="btn-primary" onclick="handleSignIn()">Sign in</button>
+
+    <!-- OTP ALTERNATIVE (Vendor only) -->
+    <div class="divider">or</div>
+    <button class="btn-outline" onclick="showOTPMethod()" id="otp-btn">Sign in with OTP (Vendors)</button>
+
+    <!-- SIGN UP LINK -->
+    <div class="sign-up-link">
+      Don't have an account? <a href="#" id="signup-link" onclick="goToSignUp(event)">Sign up as buyer</a>
+    </div>
+  </div>
+
+  <!-- OTP SECTION (hidden by default) -->
+  <div class="otp-section" id="otp-section" style="display:none">
+    <div class="login-header">
+      <h1>Sign in with OTP</h1>
+      <p>We'll send a verification code to your phone</p>
+    </div>
+
+    <div class="field">
+      <label>Phone number</label>
+      <div class="phone-row">
+        <input class="phone-prefix" type="text" value="+234" readonly>
+        <input type="tel" id="otp-phone-input" class="phone-input" placeholder="0812 345 6789" maxlength="11">
+      </div>
+      <div class="error-msg" id="otp-phone-err">Please enter a valid phone number</div>
+    </div>
+
+    <button class="btn-primary" onclick="sendOTPCode()">Send verification code</button>
+
+    <div class="sending-otp" id="sending-otp" style="display:none">
+      Sending code to your phone...
+    </div>
+
+    <div class="otp-input-section" id="otp-input-section" style="display:none">
+      <div class="divider"></div>
+      <p style="font-size:14px;color:var(--text-2);margin-bottom:4px">Enter the 6-digit code sent to <strong id="otp-phone-display"></strong></p>
+      <a class="resend-link" onclick="resendOTP()">Didn't get it? Resend code</a>
+      <div class="otp-row">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,0)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,1)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,2)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,3)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,4)">
+        <input class="otp-input" type="number" maxlength="1" oninput="otpMove(this,5)">
+      </div>
+      <div class="error-msg" id="otp-err">Incorrect code. Try again. (Hint: use 123456)</div>
+      <button class="btn-primary" onclick="verifyOTPCode()">Verify & sign in</button>
+    </div>
+
+    <button class="btn-secondary" onclick="backToPassword()" style="margin-top:16px">Back to password login</button>
+  </div>
+
+  <!-- FORGOT PASSWORD SECTION (hidden by default) -->
+  <div class="forgot-section" id="forgot-section" style="display:none">
+    <div class="login-header">
+      <h1>Reset your password</h1>
+      <p>Enter your email and we'll send you a reset link</p>
+    </div>
+
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" id="forgot-email" placeholder="you@example.com">
+      <div class="error-msg" id="forgot-email-err">Please enter a valid email</div>
+    </div>
+
+    <button class="btn-primary" onclick="sendResetLink()">Send reset link</button>
+
+    <div class="reset-sent" id="reset-sent" style="display:none;text-align:center;padding:20px;background:var(--green-light);border-radius:8px;margin-bottom:16px">
+      <div style="color:var(--green-dark);font-weight:600;margin-bottom:4px">Check your email</div>
+      <div style="color:var(--text-2);font-size:13px">We've sent a password reset link to <strong id="reset-email-display"></strong></div>
+    </div>
+
+    <button class="btn-secondary" onclick="backToPassword()">Back to sign in</button>
+  </div>
+
+</div>
+
+<script src="../js/pages/login.js"></script>
+</body>
+</html>

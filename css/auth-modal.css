@@ -1,0 +1,145 @@
+/* AUTH MODAL STYLES */
+
+.auth-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-modal-overlay.open {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-modal {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 40px 32px;
+  max-width: 420px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  transition: color 0.15s;
+}
+
+.auth-modal-close:hover {
+  color: var(--text);
+}
+
+.auth-modal-icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.auth-modal-title {
+  font-family: var(--font-head);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.auth-modal-sub {
+  color: var(--text-2);
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.auth-modal-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.auth-btn-primary,
+.auth-btn-secondary {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s;
+}
+
+.auth-btn-primary {
+  background: var(--green);
+  color: white;
+}
+
+.auth-btn-primary:hover {
+  background: var(--green-dark);
+}
+
+.auth-btn-secondary {
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.auth-btn-secondary:hover {
+  background: var(--green-light);
+  opacity: 0.8;
+}
+
+.auth-browse-link {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: color 0.15s;
+}
+
+.auth-browse-link:hover {
+  color: var(--green);
+}

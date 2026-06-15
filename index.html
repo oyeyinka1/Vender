@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vender — Trusted Nigerian Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/auth-modal.css">
+</head>
+<body>
+
+<!-- LOCATION MODAL -->
+<div class="modal-overlay" id="loc-modal-overlay" onclick="closeLoc(event)">
+  <div class="loc-modal" onclick="event.stopPropagation()">
+    <h3>Choose your location</h3>
+    <div class="loc-grid" id="loc-grid"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;padding:0 16px">
+      <button class="loc-close" onclick="closeLocModal()" style="flex:1">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="auth-modal-overlay" id="auth-modal-overlay">
+  <div class="auth-modal" onclick="event.stopPropagation()">
+    <button class="auth-modal-close" onclick="closeAuthModalDirect()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 2l12 12M14 2L2 14"/>
+      </svg>
+    </button>
+    <div class="auth-modal-icon">🔐</div>
+    <h2 class="auth-modal-title">Sign in to continue</h2>
+    <p class="auth-modal-sub" id="auth-modal-sub">
+      You need an account to place orders on Vender. It's free and takes under 2 minutes.
+    </p>
+    <div class="auth-modal-btns">
+      <button class="auth-btn-primary" onclick="window.location.href='pages/buyer-signup.html'">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="5" r="3"/>
+          <path d="M2 14a6 6 0 0112 0"/>
+        </svg>
+        Create free account
+      </button>
+      <button class="auth-btn-secondary" onclick="window.location.href='pages/login.html'">
+        Sign in
+      </button>
+    </div>
+    <button class="auth-browse-link" onclick="closeAuthModalDirect()">
+      Just browsing — continue without account
+    </button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html">Ven<span>der</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html" style="color:var(--green);font-weight:600">Explore</a></li>
+      <li><a href="pages/categories.html">Categories</a></li>
+      <li><a href="pages/vendors.html">Vendors</a></li>
+      <li><a href="#how-it-works">How it works</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="loc-btn" id="loc-btn" onclick="openLocModal()">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z"/>
+          <circle cx="7" cy="5" r="1.5"/>
+        </svg>
+        <span id="loc-label">Choose your area</span>
+        <span style="font-size:10px">▾</span>
+      </button>
+      <div class="account-dropdown">
+        <button class="btn-signin" onclick="toggleAccountMenu(event)">Sign in <span style="font-size:10px;margin-left:4px">▾</span></button>
+        <div class="account-menu" id="account-menu">
+          <a href="pages/buyer-signup.html" class="menu-item">
+            <div class="menu-item-label">Sign up as buyer</div>
+            <div class="menu-item-sub">Create a new account</div>
+          </a>
+          <a href="pages/login.html" class="menu-item">
+            <div class="menu-item-label">Sign in as buyer</div>
+            <div class="menu-item-sub">Access your account</div>
+          </a>
+          <div class="menu-divider"></div>
+          <a href="pages/become-vendor.html" class="menu-item">
+            <div class="menu-item-label">Become a vendor</div>
+            <div class="menu-item-sub">Start selling on Vender</div>
+          </a>
+          <a href="pages/login.html?role=vendor" class="menu-item">
+            <div class="menu-item-label">Sign in as vendor</div>
+            <div class="menu-item-sub">Manage your store</div>
+          </a>
+        </div>
+      </div>
+      <button class="cart-btn">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M1 1h2l2.4 9.6A2 2 0 007.3 12h6.4a2 2 0 001.9-1.4L17 5H4"/>
+          <circle cx="8" cy="15.5" r="1.5" fill="currentColor"/>
+          <circle cx="14" cy="15.5" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="cart-badge" id="cart-badge">0</div>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">✦ ESCROW PROTECTED MARKETPLACE</div>
+    <h1>Shop safer.<br><span class="green">Pay only when<br>delivered.</span></h1>
+    <p>Discover verified Nigerian vendors across every category. Your money is held securely until you confirm your order arrived as promised.</p>
+    <div class="hero-btns">
+      <!-- CHANGED: now calls startShopping() -->
+      <button class="btn-primary" onclick="startShopping()">Start shopping</button>
+      <button class="btn-outline" onclick="window.location.href='pages/become-vendor.html'">Become a vendor</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="trust-stats">
+      <div class="stat-card">
+        <div class="stat-num">2,400+</div>
+        <div class="stat-label">Verified vendors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Successful orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">₦0</div>
+        <div class="stat-label">Lost to scams</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">36</div>
+        <div class="stat-label">States covered</div>
+      </div>
+    </div>
+    <div class="escrow-card">
+      <div class="etitle">How escrow protects you</div>
+      <div class="escrow-steps">
+        <div class="estep"><div class="estep-num">1</div>You pay — funds held by Vender</div>
+        <div class="estep"><div class="estep-num">2</div>Vendor dispatches your item</div>
+        <div class="estep"><div class="estep-num">3</div>You confirm delivery</div>
+        <div class="estep"><div class="estep-num">4</div>Vendor gets paid. Problem? Full refund.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH + FILTERS -->
+<div class="search-section" id="search-section">
+  <div class="search-inner">
+
+    <!-- LOCATION NUDGE — shown for new visitors who haven't set location -->
+    <div class="loc-nudge" id="loc-nudge">
+    <div class="loc-nudge-arrow">☝️</div>
+<div class="loc-nudge-text">
+  <strong>↖ Tap "Choose your area"</strong> in the top bar to see vendors near you
+</div>
+      <button class="loc-nudge-btn" onclick="openLocModal(); hideLocNudge()">
+        Set location
+      </button>
+    </div>
+
+    <div class="search-row">
+      <div class="search-box">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><path d="M10 10l2.5 2.5"/></svg>
+        <input id="search-input" placeholder="Search products or vendors..." oninput="handleSearch(this.value)">
+        <span class="search-clear" id="search-clear" onclick="clearSearch()">×</span>
+      </div>
+      <button class="search-submit" onclick="handleSearch(document.getElementById('search-input').value)">Search</button>
+    </div>
+
+    <div class="filter-row">
+      <div class="fpill on" onclick="setCategory(this,'All')">All</div>
+      <div class="fpill" onclick="setCategory(this,'Electronics')">Electronics</div>
+      <div class="fpill" onclick="setCategory(this,'Fashion')">Fashion</div>
+      <div class="fpill" onclick="setCategory(this,'Phones')">Phones</div>
+      <div class="fpill" onclick="setCategory(this,'Food')">Food</div>
+      <div class="fpill" onclick="setCategory(this,'Beauty')">Beauty</div>
+      <div class="fpill" onclick="setCategory(this,'Health & Wellness')">Health</div>
+      <div class="fpill" onclick="setCategory(this,'Home')">Home</div>
+      <div class="fpill" onclick="setCategory(this,'Furniture')">Furniture</div>
+      <div class="fpill" onclick="setCategory(this,'Books & Education')">Books</div>
+      <div class="fpill" onclick="setCategory(this,'Sports & Outdoors')">Sports</div>
+      <div class="fpill" onclick="setCategory(this,'Automotive')">Automotive</div>
+      <div class="fpill" onclick="setCategory(this,'Crafts & Gifts')">Gifts</div>
+      <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+      <div class="filter-dropdown">
+        <div class="fpill" id="rating-pill" onclick="toggleRatingMenu()">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1l1.2 2.4L10 3.9l-2 2 .5 2.8L6 7.5l-2.5 1.2.5-2.8-2-2 2.8-.5z"/></svg>
+          Rating ▾
+        </div>
+        <div class="rating-menu" id="rating-menu">
+          <div class="rating-opt sel" onclick="setRating(0,this)">All ratings</div>
+          <div class="rating-opt" onclick="setRating(3,this)">3★ and above</div>
+          <div class="rating-opt" onclick="setRating(4,this)">4★ and above</div>
+          <div class="rating-opt" onclick="setRating(4.5,this)">4.5★ and above</div>
+        </div>
+      </div>
+      <div class="filter-dropdown">
+        <div class="fpill" id="vendor-type-pill" onclick="toggleVendorTypeMenu()">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 4h8M2 6h8M2 8h8"/></svg>
+          Vendor type ▾
+        </div>
+        <div class="vendor-type-menu" id="vendor-type-menu">
+          <div class="vendor-type-opt sel" onclick="setVendorType('any',this)">Any vendor</div>
+          <div class="vendor-type-opt" onclick="setVendorType('stock',this)">Stock available</div>
+          <div class="vendor-type-opt" onclick="setVendorType('source',this)">Sourced on order</div>
+          <div class="vendor-type-opt" onclick="setVendorType('custom',this)">Custom made</div>
+        </div>
+      </div>
+      <div class="fpill" id="verified-pill" onclick="toggleVerified()">Verified only</div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div class="active-tags" id="active-tags"></div>
+      <button class="surprise-btn" id="surprise-btn" onclick="openSurprisePicker()">
+        <span class="surprise-btn-text">🎁 Send to someone else?</span>
+      </button>
+    </div>
+
+    <div class="surprise-banner" id="surprise-banner">
+      <div class="surprise-banner-icon">🎁</div>
+      <div class="surprise-banner-text">
+        Shopping for someone in <span class="surprise-loc">your area</span>.
+        Showing vendors that deliver there.
+      </div>
+      <span class="surprise-change" onclick="openSurprisePicker()">Change location</span>
+      <span class="surprise-cancel" onclick="cancelSurpriseMode()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 2l8 8M10 2l-8 8"/>
+        </svg>
+        Back to my area
+      </span>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- VENDORS -->
+  <div id="vendor-section">
+    <div class="section-head">
+      <h2>Browse vendors</h2>
+      <a class="see-all" href="#">See all vendors</a>
+    </div>
+    <div class="vendor-grid" id="vendor-grid"></div>
+    <div class="vendor-empty" id="vendor-empty-state">
+      <div class="empty-icon">📍</div>
+      <h3>No vendors in <span id="empty-neighbourhood">your area</span> yet</h3>
+      <p>We're growing! More vendors are joining Vender every day.</p>
+      <div style="display:flex;gap:12px;margin-top:16px;justify-content:center">
+        <button class="btn-outline" onclick="alert('Notify feature coming soon')">Notify me</button>
+        <button class="btn-primary" onclick="window.location.href='pages/become-vendor.html'">Become a vendor here</button>
+      </div>
+      <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border)">
+        <h4 style="margin-bottom:12px">Vendors nearby</h4>
+        <div id="nearby-vendors-grid" class="vendor-grid"></div>
+      </div>
+    </div>
+    <div class="vendor-panel" id="vendor-panel"></div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div style="margin-top: 32px;">
+    <div class="prod-toolbar">
+      <div>
+        <h2 style="font-family:var(--font-head);font-size:18px;font-weight:700" id="prod-title">Products for you</h2>
+        <div class="results-count" id="results-count"></div>
+      </div>
+      <select class="sort-select" id="sort-select" onchange="setSort(this.value)">
+        <option value="newest">Newest first</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="rating">Top Rated</option>
+      </select>
+    </div>
+    <div class="prod-grid" id="prod-grid"></div>
+    <div class="empty" id="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3>No results found</h3>
+      <p>Try a different keyword or change your location</p>
+      <button onclick="clearAllFilters()">Clear all filters</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section" id="how-it-works">
+  <div class="how-inner">
+    <h2>How Vender works</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">1</div>
+        <h4>Find a vendor</h4>
+        <p>Browse verified vendors by category, state, or rating. Check their track record before you order.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">2</div>
+        <h4>Place your order</h4>
+        <p>Pay securely. Your money goes into escrow — not directly to the vendor — until delivery is confirmed.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">3</div>
+        <h4>Vendor delivers</h4>
+        <p>Vendor dispatches your item. You track the order status in real time from your dashboard.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">4</div>
+        <h4>Confirm &amp; release</h4>
+        <p>You confirm the item arrived as described. Funds are released to the vendor. Rate your experience.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">Vender</div>
+  <p>Nigeria's most trusted vendor marketplace. Escrow-protected. Verified vendors only.</p>
+  <p style="margin-top:12px;font-size:12px;opacity:.5">&copy; 2026 Vender. All rights reserved.</p>
+</footer>
+
+<script src="data/locations.js"></script>
+<script src="js/utils/shared-data.js"></script>
+<script src="js/utils/location-helpers.js"></script>
+<script src="js/data/vendor-data.js"></script>
+<script src="js/main.js"></script>
+
+<!-- FAILSAFE: Global functions for filters and rendering -->
+<script>
+// STATE
+window.userLocation = window.userLocation || (
+  localStorage.getItem('vender_location')
+    ? JSON.parse(localStorage.getItem('vender_location'))
+    : { state: 'Lagos', zone: 'Lagos Mainland', neighbourhood: 'Yaba' }
+);
+window.currentCat = 'All';
+window.currentSearch = '';
+window.currentSort = 'newest';
+window.minRating = 0;
+window.verifiedOnly = false;
+window.vendorTypeFilter = 'any'; // 'any', 'stock', 'source', 'custom'
+window.surpriseMode = false;
+window.surpriseLocation = null;
+window.activeVendor = null;
+
+function getActiveLocation() {
+  return (window.surpriseMode && window.surpriseLocation) ? window.surpriseLocation : window.userLocation;
+}
+
+function fmt(n) { return '₦' + n.toLocaleString(); }
+
+// FILTERS
+window.setCategory = function(el, cat) {
+  window.currentCat = cat;
+  document.querySelectorAll('.fpill:not(.filter-dropdown .fpill)').forEach(p => p.classList.remove('on'));
+  if (el) el.classList.add('on');
+  window.render();
+  window.updateTags();
+};
+
+window.toggleRatingMenu = function() {
+  const menu = document.getElementById('rating-menu');
+  if (menu) menu.classList.toggle('open');
+};
+
+window.setRating = function(val, el) {
+  window.minRating = val;
+  document.querySelectorAll('.rating-opt').forEach(o => o.classList.remove('sel'));
+  if (el) el.classList.add('sel');
+  const menu = document.getElementById('rating-menu');
+  if (menu) menu.classList.remove('open');
+  const pill = document.getElementById('rating-pill');
+  if (pill) pill.classList.toggle('filter-active', val > 0);
+  window.render();
+  window.updateTags();
+};
+
+window.toggleVendorTypeMenu = function() {
+  const menu = document.getElementById('vendor-type-menu');
+  if (menu) menu.classList.toggle('open');
+};
+
+window.setVendorType = function(type, el) {
+  window.vendorTypeFilter = type;
+  document.querySelectorAll('.vendor-type-opt').forEach(o => o.classList.remove('sel'));
+  if (el) el.classList.add('sel');
+  const menu = document.getElementById('vendor-type-menu');
+  if (menu) menu.classList.remove('open');
+  const pill = document.getElementById('vendor-type-pill');
+  if (pill) pill.classList.toggle('filter-active', type !== 'any');
+  window.render();
+  window.updateTags();
+};
+
+window.toggleVerified = function() {
+  window.verifiedOnly = !window.verifiedOnly;
+  const pill = document.getElementById('verified-pill');
+  if (pill) {
+    pill.classList.toggle('filter-active', window.verifiedOnly);
+    pill.classList.toggle('on', window.verifiedOnly);
+  }
+  window.render();
+  window.updateTags();
+};
+
+window.toggleAccountMenu = function(e) {
+  if (e) {
+    e.stopPropagation();
+  }
+  const menu = document.getElementById('account-menu');
+  const btn = document.querySelector('.btn-signin');
+  if (menu) menu.classList.toggle('open');
+  if (btn) btn.classList.toggle('active');
+};
+
+// LOCATION MODAL FUNCTIONS
+// START SHOPPING
+window.startShopping = function() {
+  const searchSection = document.getElementById('search-section');
+  if (searchSection) {
+    searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  
+  // If no location set, open the modal directly
+  if (!localStorage.getItem('vender_location')) {
+    setTimeout(() => window.openLocModal(), 600);
+  } else {
+    // If location is set, focus the search input
+    setTimeout(() => document.getElementById('search-input')?.focus(), 600);
+  }
+};
+
+window.openLocModal = function() {
+  const modal = document.getElementById('loc-modal-overlay');
+  if (modal) {
+    modal.classList.add('open');
+    // Reset picker to step 1 and render locations
+    locPickerStep = 1;
+    locPickerState = null;
+    locPickerZone = null;
+    // Call renderLocPicker after a tick to ensure DOM is ready
+    setTimeout(() => {
+      if (typeof renderLocPicker === 'function') {
+        renderLocPicker();
+      }
+    }, 0);
+  }
+};
+
+window.closeLocModal = function() {
+  const modal = document.getElementById('loc-modal-overlay');
+  if (modal) modal.classList.remove('open');
+};
+
+window.closeLoc = function(e) {
+  if (e.target === document.getElementById('loc-modal-overlay')) {
+    window.closeLocModal();
+  }
+};
+
+window.handleSearch = function(val) {
+  window.currentSearch = val;
+  const clear = document.getElementById('search-clear');
+  if (clear) clear.style.display = val ? 'inline' : 'none';
+  window.render();
+  window.updateTags();
+};
+
+window.clearSearch = function() {
+  window.currentSearch = '';
+  const input = document.getElementById('search-input');
+  if (input) input.value = '';
+  const clear = document.getElementById('search-clear');
+  if (clear) clear.style.display = 'none';
+  window.render();
+  window.updateTags();
+};
+
+window.setSort = function(val) {
+  window.currentSort = val;
+  window.renderProducts();
+};
+
+window.clearAllFilters = function() {
+  window.currentSearch = '';
+  window.currentCat = 'All';
+  window.minRating = 0;
+  window.verifiedOnly = false;
+  const input = document.getElementById('search-input');
+  if (input) input.value = '';
+  const clear = document.getElementById('search-clear');
+  if (clear) clear.style.display = 'none';
+  document.querySelectorAll('.fpill').forEach(p => p.classList.remove('on', 'filter-active'));
+  const firstPill = document.querySelector('.fpill');
+  if (firstPill) firstPill.classList.add('on');
+  document.querySelectorAll('.rating-opt').forEach(o => o.classList.remove('sel'));
+  const firstRating = document.querySelector('.rating-opt');
+  if (firstRating) firstRating.classList.add('sel');
+  window.render();
+  window.updateTags();
+};
+
+// SURPRISE MODE
+window.locPickerStep = 1;
+window.locPickerState = null;
+window.locPickerZone = null;
+
+window.openSurprisePicker = function() {
+  window.locPickerStep = 1;
+  window.locPickerState = null;
+  window.locPickerZone = null;
+  const modal = document.getElementById('loc-modal-overlay');
+  if (modal) {
+    modal.classList.add('open');
+    modal.setAttribute('data-mode', 'surprise');
+    window.renderLocPickerSurprise();
+  }
+};
+
+window.renderLocPickerSurprise = function() {
+  const container = document.getElementById('loc-grid');
+  const modal = document.querySelector('.loc-modal');
+  if (!container || !modal) return;
+
+  if (window.locPickerStep === 1) {
+    modal.querySelector('h3').textContent = 'Which state are they in?';
+    const states = getAllStates();
+    container.innerHTML = states.map(s =>
+      `<div class="loc-opt${window.surpriseLocation && s === window.surpriseLocation.state ? ' sel' : ''}" onclick="selectSurpriseState('${s}')">${s}</div>`
+    ).join('');
+  } else if (window.locPickerStep === 2) {
+    modal.querySelector('h3').textContent = `Zone in ${window.locPickerState}`;
+    const zones = getZones(window.locPickerState);
+    container.innerHTML =
+      `<div class="loc-back" onclick="window.locPickerStep=1;window.renderLocPickerSurprise()">← Back to states</div>` +
+      zones.map(z =>
+        `<div class="loc-opt${window.surpriseLocation && z === window.surpriseLocation.zone ? ' sel' : ''}" onclick="selectSurpriseZone('${z}')">${z}</div>`
+      ).join('');
+  } else if (window.locPickerStep === 3) {
+    modal.querySelector('h3').textContent = `Neighbourhood in ${window.locPickerZone}`;
+    const hoods = getNeighbourhoods(window.locPickerState, window.locPickerZone);
+    container.innerHTML =
+      `<div class="loc-back" onclick="window.locPickerStep=2;window.renderLocPickerSurprise()">← Back to zones</div>` +
+      hoods.map(n =>
+        `<div class="loc-opt${window.surpriseLocation && n === window.surpriseLocation.neighbourhood ? ' sel' : ''}" onclick="selectSurpriseNeighbourhood('${n}')">${n}</div>`
+      ).join('');
+  }
+};
+
+window.selectSurpriseState = function(state) {
+  window.locPickerState = state;
+  window.locPickerStep = 2;
+  window.renderLocPickerSurprise();
+};
+
+window.selectSurpriseZone = function(zone) {
+  window.locPickerZone = zone;
+  window.locPickerStep = 3;
+  window.renderLocPickerSurprise();
+};
+
+window.selectSurpriseNeighbourhood = function(neighbourhood) {
+  window.surpriseLocation = { state: window.locPickerState, zone: window.locPickerZone, neighbourhood };
+  sessionStorage.setItem('vender_shopping_for', JSON.stringify({
+    mode: 'surprise',
+    state: window.locPickerState,
+    zone: window.locPickerZone,
+    neighbourhood
+  }));
+  window.surpriseMode = true;
+  closeLocModal();
+  window.updateSurpriseBanner();
+  window.activeVendor = null;
+  const vendorPanel = document.getElementById('vendor-panel');
+  if (vendorPanel) vendorPanel.className = 'vendor-panel';
+  window.render();
+  window.updateTags();
+};
+
+window.cancelSurpriseMode = function() {
+  window.surpriseMode = false;
+  window.surpriseLocation = null;
+  sessionStorage.removeItem('vender_shopping_for');
+  window.updateSurpriseBanner();
+  window.activeVendor = null;
+  const vendorPanel = document.getElementById('vendor-panel');
+  if (vendorPanel) vendorPanel.className = 'vendor-panel';
+  window.render();
+  window.updateTags();
+};
+
+window.updateSurpriseBanner = function() {
+  const banner = document.getElementById('surprise-banner');
+  const btn = document.getElementById('surprise-btn');
+  if (!banner || !btn) return;
+  if (window.surpriseMode && window.surpriseLocation) {
+    banner.style.display = 'flex';
+    banner.querySelector('.surprise-loc').textContent =
+      `${window.surpriseLocation.neighbourhood}, ${window.surpriseLocation.state}`;
+    btn.classList.add('surprise-active');
+    btn.querySelector('.surprise-btn-text').textContent =
+      'Shopping for: ' + window.surpriseLocation.neighbourhood + ' ▾';
+  } else {
+    banner.style.display = 'none';
+    btn.classList.remove('surprise-active');
+    btn.querySelector('.surprise-btn-text').textContent = '🎁 Send to someone else?';
+  }
+};
+
+window.updateTags = function() {
+  const tags = [];
+  if (window.currentCat !== 'All') tags.push(`<span class="atag" onclick="clearAllFilters()">${window.currentCat} ×</span>`);
+  if (window.currentSearch) tags.push(`<span class="atag" onclick="clearSearch()">"${window.currentSearch}" ×</span>`);
+  if (window.minRating > 0) tags.push(`<span class="atag" onclick="setRating(0, document.querySelector('.rating-opt'))">${window.minRating}★+ ×</span>`);
+  if (window.vendorTypeFilter !== 'any') {
+    const typeLabels = { stock: 'Stock available', source: 'Sourced on order', custom: 'Custom made' };
+    tags.push(`<span class="atag" onclick="setVendorType('any', document.querySelector('.vendor-type-opt'))">${typeLabels[window.vendorTypeFilter]} ×</span>`);
+  }
+  if (window.verifiedOnly) tags.push(`<span class="atag" onclick="toggleVerified()">Verified only ×</span>`);
+  const row = document.getElementById('active-tags');
+  if (row) {
+    row.innerHTML = tags.join('');
+    row.style.display = tags.length ? 'flex' : 'none';
+  }
+};
+
+// SELECT VENDOR - Navigate to vendor profile page
+window.selectVendor = function(id) {
+  if (id) {
+    window.location.href = `/Pages/vendor-profile.html?id=${id}`;
+  }
+};
+
+// GO TO PRODUCT - Navigate to product detail page
+window.goToProduct = function(name, vendor, price, img, isSource) {
+  sessionStorage.setItem('vender_checkout_item', JSON.stringify({
+    name, vendor, price, img,
+    isSourceOnOrder: isSource
+  }));
+  if (window.surpriseMode && window.surpriseLocation) {
+    sessionStorage.setItem('vender_shopping_for', JSON.stringify({
+      mode: 'surprise',
+      state: window.surpriseLocation.state,
+      zone: window.surpriseLocation.zone,
+      neighbourhood: window.surpriseLocation.neighbourhood
+    }));
+  } else {
+    sessionStorage.removeItem('vender_shopping_for');
+  }
+  window.location.href = '/Pages/product.html';
+};
+
+// RENDER VENDORS
+window.renderVendors = function() {
+  const grid = document.getElementById('vendor-grid');
+  if (!grid || typeof VENDORS === 'undefined') return;
+  
+  const loc = getActiveLocation();
+  
+  let vendors = VENDORS.filter(v => {
+    if (!v.deliveryZones.includes(loc.neighbourhood)) return false;
+    if (window.currentCat !== 'All' && v.cat !== window.currentCat) return false;
+    if (window.minRating > 0 && v.rating < window.minRating) return false;
+    if (window.verifiedOnly && !v.verified) return false;
+    if (window.vendorTypeFilter !== 'any' && v.operationMode !== window.vendorTypeFilter) return false;
+    if (window.currentSearch) {
+      const q = window.currentSearch.toLowerCase();
+      return v.name.toLowerCase().includes(q) || v.cat.toLowerCase().includes(q);
+    }
+    return true;
+  });
+  
+  const emptySection = document.getElementById('vendor-empty-state');
+  
+  if (vendors.length === 0) {
+    grid.innerHTML = '';
+    if (emptySection) emptySection.classList.add('show');
+    return;
+  }
+  
+  if (emptySection) emptySection.classList.remove('show');
+  grid.innerHTML = vendors.slice(0, 6).map(v => `
+    <div class="vcard" onclick="selectVendor('${v.id}')">
+      <div class="vav" style="background:${v.bg};color:${v.tc}">${v.id}</div>
+      <div class="vname">${v.name}</div>
+      <div class="vmeta">${v.cat} · ${v.zone}</div>
+      <div class="badges">
+        <span class="badge ${v.verified ? 'badge-v' : 'badge-u'}">${v.verified ? '✓ Verified' : 'Unverified'}</span>
+        ${v.source ? '<span class="badge badge-s">Sources on order</span>' : ''}
+      </div>
+      <div class="vstars"><span class="star">★</span>${v.rating} · ${v.orders} orders</div>
+    </div>
+  `).join('');
+};
+
+// RENDER PRODUCTS
+window.renderProducts = function() {
+  const grid = document.getElementById('prod-grid');
+  if (!grid || typeof VENDORS === 'undefined' || typeof PRODUCTS === 'undefined') return;
+  
+  const loc = getActiveLocation();
+  
+  // Get vendors in current location that match the vendor type filter
+  const availableVendors = VENDORS
+    .filter(v => {
+      if (!v.deliveryZones.includes(loc.neighbourhood)) return false;
+      if (window.vendorTypeFilter !== 'any' && v.operationMode !== window.vendorTypeFilter) return false;
+      return true;
+    })
+    .map(v => v.name);
+  
+  let products = PRODUCTS.filter(p => {
+    if (!availableVendors.includes(p.vendor)) return false;
+    if (window.currentCat !== 'All' && p.cat !== window.currentCat) return false;
+    if (window.minRating > 0 && p.rating < window.minRating) return false;
+    if (window.verifiedOnly && !p.verified) return false;
+    if (window.currentSearch) {
+      const q = window.currentSearch.toLowerCase();
+      return p.name.toLowerCase().includes(q) || p.vendor.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q);
+    }
+    return true;
+  });
+  
+  if (window.currentSort === 'price-asc') products.sort((a, b) => a.price - b.price);
+  else if (window.currentSort === 'price-desc') products.sort((a, b) => b.price - a.price);
+  else if (window.currentSort === 'rating') products.sort((a, b) => b.rating - a.rating);
+  
+  const empty = document.getElementById('empty-state');
+  
+  if (products.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.classList.add('show');
+    return;
+  }
+  
+  if (empty) empty.classList.remove('show');
+  
+  grid.innerHTML = products.slice(0, 12).map(p => `
+    <div class="pcard" onclick="if(typeof goToProduct==='function'){goToProduct('${p.name}', '${p.vendor}', ${p.price}, '${p.img}', ${p.source || false})}">
+      <div class="pimg" style="background:${p.bg}">${p.img}</div>
+      <div class="pinfo">
+        <div class="pname">${p.name}</div>
+        <div class="pprice">${fmt(p.price)}</div>
+        <div class="pvendor">
+          <div class="pdot" style="background:${p.verified ? 'var(--green)' : 'var(--orange)'}"></div>
+          ${p.vendor}${p.source ? ' · sources to order' : ''}
+        </div>
+        <div class="prating"><span class="star">★</span>${p.rating}</div>
+      </div>
+    </div>
+  `).join('');
+};
+
+// COMBINED RENDER
+window.render = function() {
+  if (typeof window.renderVendors === 'function') window.renderVendors();
+  if (typeof window.renderProducts === 'function') window.renderProducts();
+};
+
+// INITIAL RENDER ON LOAD
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    const vendorGrid = document.getElementById('vendor-grid');
+    const prodGrid = document.getElementById('prod-grid');
+    
+    if ((vendorGrid && vendorGrid.innerHTML.trim() === '') || (prodGrid && prodGrid.innerHTML.trim() === '')) {
+      if (typeof VENDORS !== 'undefined' && typeof PRODUCTS !== 'undefined') {
+        window.render();
+      }
+    }
+  }, 500);
+});
+</script>
+
+  <!-- DEV ONLY: remove before launch -->
+  <button onclick="localStorage.removeItem('vender_location'); location.reload()"
+    style="position:fixed;bottom:16px;right:16px;z-index:9999;background:#111;color:#fff;
+           border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;opacity:0.7">
+    🔄 Reset location
+  </button>
+  
+</body>
+</html>
